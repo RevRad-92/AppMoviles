@@ -1,0 +1,117 @@
+fun main() {
+    println("Piedra papel tijera")
+
+    val jugador1 = JugadorAleatorio("Jojo")
+    val jugador2 = LaRoca()
+    
+	imprimirNombres(jugador1,jugador2)
+
+    alMejorDe(jugador1, jugador2,10)
+    
+}
+
+fun alMejorDe(jugador1: Jugador, jugador2: Jugador, rondas: Int) {
+    	
+    var puntosJugador1 = 0
+    var puntosJugador2 = 0
+    
+    do {
+    	val resultado = ronda(jugador1,jugador2)
+        if (resultado == Resultado.gana) {
+            puntosJugador1 += 1
+        }else{
+            puntosJugador2 += 1
+        }
+        imprimirResultado(jugador1,jugador2,resultado)
+    } while ( puntosJugador1 < rondas && puntosJugador2 < rondas)
+}
+
+fun ronda(jugador1:Jugador, jugador2:Jugador) : Resultado {
+    val jugada1 = jugador1.jugar()
+    val jugada2 = jugador2.jugar()
+    
+    println("$jugada1 - $jugada2")
+    val resultado = quienGana(jugada1,jugada2)
+    return resultado
+}
+
+fun imprimirResultado(jugador1: Jugador, jugador2: Jugador, resultado: Resultado){
+    if (resultado == Resultado.empata) {
+    	println("$resultado")    
+    } else if (resultado == Resultado.gana) {
+    	println("${jugador1.cualEsElNombre()} $resultado")    
+    }else{
+        println("${jugador1.cualEsElNombre()} $resultado")    
+    }
+    println("")
+}
+
+fun imprimirNombres(jugador1: Jugador, jugador2: Jugador){
+    println("")
+    println(jugador1.cualEsElNombre())
+    println("VS")
+    println(jugador2.cualEsElNombre())
+    println("")
+}
+
+interface Jugador {
+    fun jugar() : Jugada
+    fun cualEsElNombre() : String
+}
+
+class Tijeras (
+	val nombre: String
+    // constructor
+): Jugador {
+    override fun jugar () : Jugada {
+        return Jugada.tijera
+    }
+    override fun cualEsElNombre() : String{
+        return nombre
+    }
+}
+
+class JugadorAleatorio (
+	val nombre: String
+): Jugador {
+    override fun jugar () : Jugada {
+        return Jugada.entries.random()
+    }
+    override fun cualEsElNombre() : String{
+        return nombre
+    }
+}
+
+class LaRoca: Jugador {
+    override fun jugar () : Jugada {
+        return Jugada.piedra
+    }
+    override fun cualEsElNombre() : String{
+        return "La Roca"
+    }
+}
+
+enum class Resultado {
+    gana, pierde, empata
+}
+
+enum class Jugada {
+    piedra,
+    papel,
+    tijera
+}
+
+fun quienGana(jugada1:Jugada, jugada2:Jugada) : Resultado {
+    
+    if (jugada1 == jugada2) {
+        return Resultado.empata
+    }
+    if 	((jugada1 == Jugada.piedra && jugada2 == Jugada.tijera) ||
+    	(jugada1 == Jugada.papel && jugada2 == Jugada.piedra) ||
+    	(jugada1 == Jugada.tijera && jugada2 == Jugada.papel))
+    {
+     	return Resultado.gana   
+    }
+    
+    return Resultado.pierde
+}
