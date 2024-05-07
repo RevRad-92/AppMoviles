@@ -83,9 +83,7 @@ fun MainPage(modifier: Modifier = Modifier) {
             floatingActionButton = {
                 FloatingActionButton(onClick = {
                     navController.navigate("page2")
-                    coroutineScope.launch {
-                        drawerState.close()
-                    }
+                    
                 }) {
                     Icon(Icons.Filled.Build, contentDescription = "flotante")
                 }
